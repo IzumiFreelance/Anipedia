@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Universe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --bg-dark: #1a1a1a;
+            --bg-card: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 20%);
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .anime-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .anime-card img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .anime-card:hover img {
+            transform: scale(1.03);
+        }
+
+        .anime-card h3 {
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .anime-card p {
+            color: var(--text-secondary);
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .watch-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-align: center;
+            width: 100%;
+        }
+
+        .watch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.2em;
+            padding: 20px;
+            color: var(--text-secondary);
+        }
+
+        .error {
+            color: var(--primary-color);
+            text-align: center;
+            padding: 30px;
+            background: rgba(255,107,107,0.1);
+            border-radius: 15px;
+            margin: 20px auto;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .error ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .error li {
+            margin: 5px 0;
+            color: var(--text-secondary);
+        }
+
+        /* Score badge */
+        .score-badge {
+            background: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        /* Status indicator */
+        .status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--secondary-color);
+            margin-top: 5px;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .anime-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .anime-card img {
+                height: 300px;
+            }
+        }
+
+        .filters {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-select {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 150px;
+        }
+
+        .filter-select:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .search-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            min-width: 300px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .anime-info {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .genre-tag {
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--secondary-color);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                padding: 0 10px;
+            }
+            
+            .search-input {
+                min-width: 200px;
+            }
+        }
+
+        .synopsis {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin: 10px 0;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .loading-more {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* Optional: Add a smooth fade effect at the bottom */
+        .anime-grid::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(transparent, var(--bg-dark));
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Add these to your existing styles */
+        .search-stats {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .search-input {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255,107,107,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Anime Universe</h1>
+        <p>Discover the best anime from around the world</p>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <select id="genreFilter" class="filter-select">
+                    <option value="">All Genres</option>
+                    <option value="1">Action</option>
+                    <option value="2">Adventure</option>
+                    <option value="4">Comedy</option>
+                    <option value="8">Drama</option>
+                    <option value="10">Fantasy</option>
+                    <option value="14">Horror</option>
+                    <option value="7">Mystery</option>
+                    <option value="22">Romance</option>
+                    <option value="24">Sci-Fi</option>
+                    <option value="36">Slice of Life</option>
+                    <option value="37">Supernatural</option>
+                </select>
+
+                <select id="ratingFilter" class="filter-select">
+                    <option value="">All Ratings</option>
+                    <option value="g">G - All Ages</option>
+                    <option value="pg">PG - Children</option>
+                    <option value="pg13">PG-13 - Teens 13+</option>
+                    <option value="r17">R - 17+</option>
+                </select>
+
+                <select id="statusFilter" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="airing">Currently Airing</option>
+                    <option value="complete">Completed</option>
+                    <option value="upcoming">Upcoming</option>
+                </select>
+
+                <select id="sortBy" class="filter-select">
+                    <option value="favorites">Sort by Favorites</option>
+                    <option value="score">Sort by Rating</option>
+                    <option value="popularity">Sort by Popularity</option>
+                    <option value="rank">Sort by Rank</option>
+                </select>
+            </div>
+
+            <div class="search-group">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search anime...">
+                <button class="refresh-btn" onclick="fetchAnimeData()">Show New Anime</button>
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        <div class="loading">Loading amazing anime for you...</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
